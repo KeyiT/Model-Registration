@@ -1,0 +1,10 @@
+package artisynth.models.swallowingRegistrationTool;
+
+import maspack.matrix.AffineTransform3d;
+import maspack.matrix.Point3d;
+import maspack.matrix.Vector3d;
+
+public interface AffineModelOptimizer {
+   public void addMappingGoal (Point3d srcPnt, Vector3d tgtPnt, double weight);
+   public AffineTransform3d findBestAffineTransformMatrix (CorrespondenceFeature feature);
+}

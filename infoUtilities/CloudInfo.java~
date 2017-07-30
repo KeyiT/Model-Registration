@@ -1,0 +1,158 @@
+package artisynth.models.swallowingRegistrationTool.infoUtilities;
+
+import java.util.ArrayList;
+
+import maspack.matrix.ImproperStateException;
+
+public class CloudInfo extends ObjInfo{
+   
+   protected ArrayList<ObjInfo> myInfoList =  new ArrayList<ObjInfo> ();
+   protected FeatureList<CorrespondenceFeature> myFeatureList = new FeatureList<CorrespondenceFeature>();
+   
+   public ArrayList<ObjInfo> getInfos() {
+      return myInfoList;
+   }
+   
+   protected FeatureList<CorrespondenceFeature> getFeatures() {
+      return myFeatureList;
+   }
+   
+   public CloudInfo (String name) {
+      setName(name);
+   }
+   
+   @Override
+   public boolean update() {
+      boolean flag = true;
+      for (ObjInfo info : getInfos()) {
+         if (flag == true) {
+            flag = info.update ();
+         } else {
+            info.update ();
+         }
+      }
+      
+      if (flag = true) {
+         return super.update ();
+      } else {
+         super.update ();
+         return false;
+      }
+   }
+   
+   
+   public boolean addInfo (ObjInfo info) {
+      if (getInfos().add (info)) {
+         if (info.getCorrespondenceFeature () != null) {
+            getFeatures().add (getInfos().indexOf (info), info.getCorrespondenceFeature ());
+         }
+         return true;
+      } else {
+         return false;
+      }
+   }
+   
+
+   
+   public ObjInfo getInfo(int index) {
+      return getInfos().get (index);
+   }
+   
+   public ObjInfo getInfo (String infoName) {
+      for (ObjInfo info : getInfos()) {
+         if (info.getName ().equalsIgnoreCase ("infoName")) {
+            return info;
+         }
+      }
+      return null;
+   }
+   
+   /**
+    * get correspondence-feature by number
+    * @param index
+    * @return
+    */
+   public CorrespondenceFeature getInfoFeature(int index) {
+      return getFeatures().get (index);
+   }
+   
+   /**
+    * @param info
+    * @return correspondence-feature of <tt>info</tt> from feature-list
+    */
+   public CorrespondenceFeature getInfoFeature (ObjInfo info) {
+      if (! myInfoList.contains (info)) {
+         throw new ImproperStateException("Info is not in the list");
+      }
+      return myFeatureList.get (myInfoList.indexOf (info));
+   }
+   
+   
+   /**
+    * set <tt>feature</tt> as the correspondence-feature of <tt>info</tt> 
+    * if <tt>info</tt> has an old correspondence-feature, the old feature 
+    * would be removed
+    * @param info, 
+    */
+   public void addInfoFeature(ObjInfo info, CorrespondenceFeature feature) {
+      if (!myInfoList.contains (info)) {
+         throw new ImproperStateException("Info is not in the List");
+      }
+      if (feature == null) {
+         throw new NullPointerException("Null Correspondence Feature");
+      }
+      if (info.getCorrespondenceFeature () != null) {
+         System.out.println ("Old feature has been removed");
+      }
+      info.setCorrespondenceFeature (feature);
+      myFeatureList.add (myInfoList.indexOf (info), info.getCorrespondenceFeature ());
+   }
+   
+   /**
+    * This will rebuild feature-list 
+    * based on current info-list;
+    * 
+    * Every correspondence-feature of object-
+    * infos in info-list will be added into
+    * feature-list
+    */
+   public void updateFeatureList() {
+      System.out.println ("Clearing feauture list ...");
+      myFeatureList.clear ();
+      System.out.println ("rebuilding feature list ...");
+      for (ObjInfo info : myInfoList) {
+         if (info.getCorrespondenceFeature () != null) {
+            myFeatureList.add (myInfoList.indexOf (info), 
+               info.getCorrespondenceFeature ());
+         }
+      }
+   }
+   
+   public boolean removeInfo(ObjInfo info) {
+      if (getInfos().remove (info)) {
+         if (info.myCorrFeat != null) {
+            return getFeatures().remove (info.getCorrespondenceFeature ());
+         }
+         return true;
+      } else {
+         return false;
+      }
+   }
+   
+   public void clearInfoList () {
+      for (ObjInfo info : myInfoList) {
+         removeInfo(info);
+      }
+   }
+
+   @Override
+   public ObjInfo clone () throws CloneNotSupportedException {
+      CloudInfo v = new CloudInfo (getName());
+      for (ObjInfo info : myInfoList) {
+         v.addInfo (info.clone ());
+      }
+      return v;
+   }
+   
+
+}
