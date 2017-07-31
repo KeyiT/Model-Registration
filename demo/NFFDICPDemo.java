@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.demo;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import artisynth.core.modelbase.ControllerBase;
 import artisynth.core.workspace.DriverInterface;
 import artisynth.core.workspace.RootModel;
-import artisynth.models.swallowingRegistrationTool.ICP.ICPARAPManager;
+import artisynth.models.swallowingRegistrationTool.ICP.ICPManager;
 import artisynth.models.swallowingRegistrationTool.utilities.MeshModelAgent;
 import maspack.geometry.MeshBase;
 import maspack.geometry.MeshFactory;
@@ -20,9 +21,9 @@ import maspack.render.GL.GLViewer.BlendFactor;
 import maspack.render.Renderer.FaceStyle;
 import maspack.render.Renderer.Shading;
 
-public class ARAPICPDemo extends RootModel{
+public class NFFDICPDemo extends RootModel{
    
-   ICPARAPManager icp = new ICPARAPManager ("Demo");
+   ICPManager icp = new ICPManager ("Demo");
    List <MeshModelAgent> slaves = new ArrayList <MeshModelAgent> ();
    
    public void build (String [] args) {
@@ -40,7 +41,7 @@ public class ARAPICPDemo extends RootModel{
       
       
       // initialize registration
-      Map <PolygonalMesh, MeshBase> map =  new HashMap <PolygonalMesh, MeshBase> ();
+      Map <MeshBase, MeshBase> map =  new HashMap <MeshBase, MeshBase> ();
       map.put (torus, tube);
       //map.put (sphere, box);
 
@@ -48,7 +49,7 @@ public class ARAPICPDemo extends RootModel{
       MeshModelAgent slave = new MeshModelAgent ();
       slave.represent (torus);
       slaves.add (slave);
-      icp.initialize (map);
+      icp.initialize (map, null, slaves);
       addModel (icp);
       icp.renderSourceAndTargetMesh (this);
       
@@ -68,11 +69,22 @@ public class ARAPICPDemo extends RootModel{
 
       icp.setSourceMeshRenderProps (srcProp);
       icp.setTargetMeshRenderProps (tgtProp);
-      icp.createControlPanelForMLDAction (this);
+      
+      icp.createControlPanelForNFFDAction (this);
       icp.createRegistrationErrorProbe (this);
-      icp.setRigidity (0.6);
 
       icp.setEnableIteration (true);
+      icp.setFFDUpgradeRatio (0.06);
+      icp.setSlaveBendingWeights (slave, 0);
+      icp.setSlaveACAPWeights (slave, 0.06);
+      icp.setSlaveLaplacianWeights (slave, 0.0);
+      icp.setSlaveARAPWeights (slave, 0.0);
+      icp.upgradeFFD (0);
+      icp.getCloudMap ().update ();
+      icp.enableSlaveConformalModesUpdate (false);
+      
+      WeightController wc = new WeightController (this);
+      addController (wc);
    }
    
    public void attach (DriverInterface driver)
@@ -85,4 +97,29 @@ public class ARAPICPDemo extends RootModel{
       getMainViewer ().setBlendSourceFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);
       getMainViewer ().setBlendDestFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);
    }
+   
+   public class WeightController extends ControllerBase{
+      NFFDICPDemo myDemo;
+      double bw;
+      double th = 0.038;
+      
+      public WeightController (NFFDICPDemo demo) {
+         myDemo = demo;
+         bw = myDemo.icp.getSlaveACAPWeights (
+            myDemo.slaves.get (0));
+      }
+
+      @Override
+      public void apply (double t0, double t1) {
+         double err = myDemo.icp.getRegErr ();
+         double w = bw;
+         if (err < th) {
+            w *= (err * err / th / th);
+         }
+         myDemo.icp.setSlaveACAPWeights (
+            myDemo.slaves.get (0), w);
+      }
+      
+   }
+
 }

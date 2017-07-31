@@ -2,7 +2,7 @@ package artisynth.models.swallowingRegistrationTool.ICP;
 
 import java.util.List;
 
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import artisynth.models.swallowingRegistrationTool.transformers.ACAPDeformer;
 import artisynth.models.swallowingRegistrationTool.transformers.MeshBasedLinearDeformer;
 import artisynth.models.swallowingRegistrationTool.transformers.RegistrationTransformer;

@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.main;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

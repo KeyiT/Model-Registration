@@ -7,7 +7,7 @@ import artisynth.core.femmodels.FemNode3d;
 import artisynth.core.femmodels.HexElement;
 import artisynth.core.workspace.RootModel;
 import artisynth.models.modelOrderReduction.ReadWrite;
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import maspack.matrix.MatrixNd;
 import maspack.matrix.Point3d;
 

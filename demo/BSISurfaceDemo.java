@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.demo;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -6,11 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import artisynth.core.femmodels.FemFactory;
 import artisynth.core.femmodels.FemModel3d;
-import artisynth.core.femmodels.FemModel.SurfaceRender;
 import artisynth.core.modelbase.RenderableComponentList;
-import artisynth.core.modelbase.StepAdjustment;
 import artisynth.core.util.ArtisynthPath;
 import artisynth.core.workspace.DriverInterface;
 import artisynth.core.workspace.RootModel;
@@ -25,10 +22,9 @@ import maspack.matrix.RigidTransform3d;
 import maspack.render.RenderProps;
 import maspack.render.GL.GLViewer.BlendFactor;
 import maspack.render.Renderer.FaceStyle;
-import maspack.render.Renderer.PointStyle;
 import maspack.render.Renderer.Shading;
 
-public class BSIDemo extends RootModel{
+public class BSISurfaceDemo extends RootModel{
 
    BSIManager bsi = new BSIManager ("Demo");
    protected RenderableComponentList <FemModel3d> fems =
@@ -48,29 +44,21 @@ public class BSIDemo extends RootModel{
          ArtisynthPath.getSrcRelativePath (BSIDemo.class, "geometry/box2sphere"));
 
       // slave
-      addBeam (5.0, 0.75, 0.75, 16, 5, 5);
-      fems.get (0).transformPose (new RigidTransform3d (0, 0, 0.02));
+      addBoxSurfaceMesh (4.0, 0.75, 0.75, 20, 5, 5);
+      meshes.get (0).transformMesh (new RigidTransform3d (0, 0, 0.02));
 
       // initialize registration
       Map <MeshBase, MeshBase> map =  new HashMap <MeshBase, MeshBase> ();
       map.put (box1, sphere1);
       //map.put (box2, box22);
       //map.put (box3, box33);
-      List<FemModel3d> slaves = new ArrayList<FemModel3d> ();
-      slaves.addAll (fems);
-      bsi.initialize (map, slaves, null);
+      List <MeshModelAgent> slaves = new ArrayList <MeshModelAgent> ();
+      slaves.addAll (meshes);
+      bsi.initialize (map, null, slaves);
       addModel (bsi);
       bsi.renderSourceAndTargetMesh (this, 0.45, 0.5, 
          Shading.SMOOTH, Shading.SMOOTH);
-      bsi.createControlPanel (this);
-      bsi.createRegistrationErrorProbe (this);
-
-      bsi.setEnableIteration (true);
-      bsi.setFFDUpgradeRatio (0.08);
-      bsi.setSlaveStrainWeights (fems.get (0), 0.03);
-      bsi.upgradeFFD (0);
-      bsi.getCloudMap ().update ();
-      bsi.enableNFFDIterativeActions ();
+      bsi.createControlPanelForNFFDAction (this);
 
       RenderProps srcProp = new RenderProps ();
       srcProp.setFaceColor (Color.RED);
@@ -89,19 +77,19 @@ public class BSIDemo extends RootModel{
       bsi.setSourceMeshRenderProps (srcProp);
       bsi.setTargetMeshRenderProps (tgtProp);
 
-      fems.get (0).setAutoGenerateSurface (true);
-      fems.get (0).getSurfaceMesh ();
-      fems.get (0).setSurfaceRendering (SurfaceRender.Shaded);
+      bsi.setEnableIteration (true);
+      bsi.setFFDUpgradeRatio (0.1);
+      bsi.setSlaveACAPWeights (meshes.get (0), 0.06);
+      bsi.upgradeFFD (0);
+      bsi.getCloudMap ().update ();
+      bsi.enableSlaveConformalModesUpdate (false);
+      bsi.enableNFFDIterativeActions ();
+      
 
-      RenderProps.setPointStyle (fems, PointStyle.SPHERE);
-      RenderProps.setPointColor (fems, new Color (164, 44, 168));
-      RenderProps.setPointRadius (fems, 0.02);
-      RenderProps.setLineColor (fems, new Color (164, 41, 246));
-
-      RenderProps.setFaceColor (fems.get (0).getSurfaceMeshComp (), 
-         new Color (238, 232, 170));
-      RenderProps.setAlpha(fems.get (0).getSurfaceMeshComp (), 
-         0.5);
+      RenderProps.setDrawEdges (meshes, true);
+      RenderProps.setEdgeColor (meshes, new Color (255, 102, 102));
+      RenderProps.setFaceColor (meshes, new Color (238, 232, 170));
+      RenderProps.setShading (meshes, Shading.SMOOTH);
    }
 
    public void attach (DriverInterface driver)
@@ -115,20 +103,14 @@ public class BSIDemo extends RootModel{
       getMainViewer ().setBlendDestFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);
    }
    
-   @Override
-   public StepAdjustment advance (
-      double t0, double t1, int flags) {
-      StepAdjustment sa = super.advance (t0, t1, flags);
-      fems.get (0).updateSlavePos ();
-      //fems.get (0).updateStressAndStiffness ();
-      return sa;
-   }
-   
-   public void addBeam (double wx, double wy, double wz, 
+   public void addBoxSurfaceMesh (double wx, double wy, double wz, 
       int numX, int numY, int numZ) {
-      FemModel3d beam = new FemModel3d ();
-      FemFactory.createHexGrid (beam, wx, wy, wz, numX, numY, numZ);
-      fems.add (beam);
+      Point3d center = new Point3d ();
+      PolygonalMesh box = MeshFactory.createBox (
+         wx, wy, wz, center, numX, numY, numZ);
+      MeshModelAgent agent = new MeshModelAgent ();
+      agent.represent (box);
+      meshes.add (agent);
    }
 
 }

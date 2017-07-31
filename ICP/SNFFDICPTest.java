@@ -2,8 +2,8 @@ package artisynth.models.swallowingRegistrationTool.ICP;
 
 import artisynth.core.femmodels.FemModel3d;
 import artisynth.core.gui.ControlPanel;
-import artisynth.models.swallowingRegistrationTool.IterativeActionsPanel;
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.IterativeActionsPanel;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import artisynth.models.swallowingRegistrationTool.correspondences.ClosestPoint3dMap;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.UniformMeshFeatureSubsampler;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.MeshInfoAllocator.MeshFeature;
