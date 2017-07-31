@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.demo;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -222,8 +222,8 @@ public class BSIHybridDemo extends RootModel{
       
       meanError.setSize (meanError.size () + 1);
       maxError.setSize (maxError.size () + 1);
-      meanError.set (meanError.size () - 1, bsi.myErr);
-      maxError.set (maxError.size () - 1, bsi.myMaxErr);
+      meanError.set (meanError.size () - 1, bsi.getRegErr ());
+      maxError.set (maxError.size () - 1, bsi.getMaxRegErr ());
    }
    
    public void report (String dirPath) throws IOException {

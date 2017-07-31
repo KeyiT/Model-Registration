@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 
 import artisynth.core.gui.ControlPanel;
 import artisynth.core.workspace.RootModel;
-import artisynth.models.swallowingRegistrationTool.IterativeActionsPanel;
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.IterativeActionsPanel;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import artisynth.models.swallowingRegistrationTool.correspondences.ClosestPoint3dMap;
 import artisynth.models.swallowingRegistrationTool.correspondences.SurfaceClosestPoint3dMap;
 import artisynth.models.swallowingRegistrationTool.correspondences.VertexToMeshCorrespondence;

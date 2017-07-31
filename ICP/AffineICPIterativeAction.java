@@ -6,14 +6,13 @@ import java.util.List;
 import artisynth.core.gui.ControlPanel;
 import artisynth.core.modelbase.TransformableGeometry;
 import artisynth.core.workspace.RootModel;
-import artisynth.models.swallowingRegistrationTool.IterativeActions;
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.IterativeActions;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import artisynth.models.swallowingRegistrationTool.BSI.TIMFormulator;
 import artisynth.models.swallowingRegistrationTool.correspondences.ClosestPoint3dMapPanel;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.SlaveInfo;
 import artisynth.models.swallowingRegistrationTool.optimizers.Formulator;
 import artisynth.models.swallowingRegistrationTool.transformers.AffineModelTransformer;
-import artisynth.models.swallowingRegistrationTool.transformers.NFFDeformer;
 import artisynth.models.swallowingRegistrationTool.transformers.RegistrationTransformer;
 
 public class AffineICPIterativeAction implements IterativeActions{

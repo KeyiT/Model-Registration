@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.main;
 
 import java.util.ArrayList;
 import java.util.Collection;

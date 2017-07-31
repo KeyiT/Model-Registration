@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import artisynth.models.swallowingRegistrationTool.IterativeTask;
-import artisynth.models.swallowingRegistrationTool.RegistrationManager;
+import artisynth.models.swallowingRegistrationTool.main.IterativeTask;
+import artisynth.models.swallowingRegistrationTool.main.RegistrationManager;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.NFFDSlaveInfo;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.SlaveInfo;
 import artisynth.models.swallowingRegistrationTool.infoUtilities.SlaveInfo.SlaveType;
@@ -218,7 +218,7 @@ public class SNFFDICPTask implements IterativeTask{
                      slaveInfo, slaveP.getStrainWeight ());
                }
                if (slaveP.getQualityWeight () != 0) {
-                  myFFDForm.regularizeFEMSlaveMeshQuality (myForm, null, null, 
+                  myFFDForm.regularizeFEMSlaveMeshQuality1 (myForm, null, null, 
                      slaveInfo, slaveP.getQualityWeight ());
                }
             }

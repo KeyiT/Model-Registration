@@ -51,7 +51,7 @@ public class FEMQualityUtilities {
       // TODO Auto-generated constructor stub
    }
    
-   /*
+   
    public void renderMeanRatioForElements (FemModel3d fem) {
       double [] etas = evalMeanRatios (fem);
       int size = lineWidth.length;
@@ -82,7 +82,7 @@ public class FEMQualityUtilities {
          RenderProps.setLineColor (ele, rgb);
          RenderProps.setLineWidth (ele, width);
       }
-   }*/
+   }
    
    public void renderMeanRatioForElements (FemModel3d fem, double [] ths) {
       if (ths == null || ths.length == 0) {

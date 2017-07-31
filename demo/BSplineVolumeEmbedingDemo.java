@@ -1,4 +1,4 @@
-package artisynth.models.swallowingRegistrationTool;
+package artisynth.models.swallowingRegistrationTool.demo;
 
 import java.awt.Color;
 import java.io.IOException;
